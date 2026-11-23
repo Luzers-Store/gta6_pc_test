@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Posso rodar Leonida?</title>
+<style>
+:root{--bg:#160f2e;--line:#3d3570;--ink:#f6ecdf;--mute:#b9afc7;--pink:#ff6aa0;--teal:#35e8c8;--amber:#ffc857;--orange:#ff9f5c;--red:#ff6b6b;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:linear-gradient(160deg,#160f2e,#3a1c5a 60%,#7a2f5e);color:var(--ink);font:16px/1.55 system-ui,"Segoe UI",sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:36px 18px 60px}
+h1{font:700 clamp(2rem,5vw,3.2rem)/1.05 Georgia,serif;margin:0 0 8px}
+h1 span{color:var(--pink)}
+.sub{color:var(--mute);margin:0 0 22px;max-width:62ch}
+.grid{display:grid;grid-template-columns:minmax(260px,1fr) 1.25fr;gap:20px}
+.card{background:rgba(33,26,69,.93);border:1px solid var(--line);border-radius:14px;padding:20px}
+label{display:block;font-weight:600;color:var(--mute);margin:12px 0 5px;font-size:.9rem}
+label:first-child{margin-top:0}
+select,input{width:100%;background:#150e2c;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit}
+select:focus-visible,input:focus-visible,button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.presets{display:flex;flex-wrap:wrap;gap:8px}
+button{background:#2c2358;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:8px 12px;cursor:pointer;font:inherit;font-size:.85rem}
+button:hover{border-color:var(--teal)}
+h2{font:700 1.5rem/1.2 Georgia,serif;margin:0 0 4px}
+.row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.row small{display:block;color:var(--mute)}
+.b{font-weight:700;white-space:nowrap}
+.acima{color:var(--teal)}.faixa{color:var(--amber)}.perto{color:var(--orange)}.abaixo{color:var(--red)}.nd,.na{color:var(--mute)}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:.9rem}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
+th{color:var(--mute);font-weight:600}
+.scroll{overflow-x:auto}
+.warn{margin-top:14px;padding:12px;border:1px solid var(--amber);border-radius:10px;font-size:.9rem}
+details{margin-top:12px;color:var(--mute);font-size:.88rem}
+summary{cursor:pointer;color:var(--ink)}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Posso rodar <span>Leonida?</span></h1>
+<p class="sub">Compare o seu PC com os níveis citados pelo desenvolvedor e pela comunidade. O dev diz que o Leonida ainda não está pronto nem é jogável, então isto é só uma estimativa.</p>
+<div class="grid">
+<div class="card">
+<label for="ref">Comparar com</label>
+<select id="ref"></select>
+<label for="cpu">CPU (digite ou escolha)</label>
+<input id="cpu" list="cpus" placeholder="Ex.: Xeon E5-2690 v4" autocomplete="off">
+<datalist id="cpus"></datalist>
+<label for="gpu">GPU (digite ou escolha)</label>
+<input id="gpu" list="gpus" placeholder="Ex.: RX 580 2048SP" autocomplete="off">
+<datalist id="gpus"></datalist>
+<div class="two">
+<div><label for="ramt">Tipo de RAM</label><select id="ramt"><option>DDR4</option><option>DDR5</option><option>DDR3</option></select></div>
+<div><label for="ram">RAM (GB)</label><input id="ram" type="number" min="4" max="128" step="4" value="16"></div>
+</div>
+<label for="sp">Velocidade da RAM (MHz)</label>
+<input id="sp" type="number" min="800" max="9000" step="200" value="3200">
+<div class="two">
+<div><label for="sto">Armazenamento</label><select id="sto"><option value="NVME">SSD NVMe</option><option value="SATA">SSD SATA</option><option value="HD">HD</option></select></div>
+<div><label for="gb">Espaço livre (GB)</label><input id="gb" type="number" min="0" step="50" value="500"></div>
+</div>
+<label>Meus PCs</label>
+<div class="presets" id="presets"></div>
+</div>
+<div class="card">
+<h2 id="title"></h2>
+<p class="sub" id="refnote" style="margin:0 0 6px"></p>
+<div id="rows"></div>
+<div class="warn" id="warn"></div>
+<h2 style="margin-top:20px;font-size:1.2rem">Resumo contra todos os níveis</h2>
+<div class="scroll"><table><thead><tr><th>Nível</th><th>CPU</th><th>GPU</th><th>Geral</th></tr></thead><tbody id="all"></tbody></table></div>
+<details><summary>Fontes e limites</summary>
+<p>Os níveis vêm de duas notas coladas pelo dono do site: uma que diz ser do desenvolvedor do Leonida e outra de um membro da comunidade. Não consegui confirmar quem as escreveu, e nenhuma é da Rockstar. O dev diz que DLSS e FSR são suportados, que a RX 580 roda com gráficos ruins e que o mínimo é uma RTX série 30 de 8 GB com Ryzen 5 5600X, DDR4 3200 e 16 GB. A resolução 1080p em low é expectativa do dono do site, não do dev. Os índices de CPU e GPU são estimativas minhas, de memória, sem benchmark conferido. A VRAM de alguns modelos varia, como a da RX 580 2048SP. Só a RTX 5060 Ti e a RX 9060 XT, usadas como referência do PS5 Pro, estão na lista da série 50 e da série 9000, e o índice delas é estimado por mim.</p></details>
+</div>
+</div>
+</div>
+<script>
+// [nome, índice relativo de desempenho (GTX 1060 6GB = 100), VRAM em GB]
+const G=[["GTX 1050 Ti",60,4],["GTX 1060 6GB",100,6],["GTX 1650",87,4],["GTX 1650 Super",115,4],["GTX 1660",127,6],["GTX 1660 Super",142,6],["GTX 1660 Ti",148,6],["RTX 2060",166,6],["RTX 2060 Super",195,8],["RTX 2070 Super",235,8],["RTX 3050 6GB",130,6],["RTX 3050 8GB",150,8],["RTX 3060 12GB",190,12],["RTX 3060 Ti",250,8],["RTX 3070",285,8],["RTX 4060",230,8],["RTX 4060 Ti",275,8],["RTX 5060 Ti 16GB",315,16],["RX 9060 XT 16GB",310,16],["RX 570 4GB",95,4],["RX 580 2048SP",100,8],["RX 580 8GB",115,8],["RX 5500 XT 8GB",118,8],["RX 5600 XT",160,6],["RX 5700 XT",195,8],["RX 6500 XT",120,4],["RX 6600",200,8],["RX 6600 XT",220,8],["RX 6650 XT",230,8],["RX 6700 XT",275,12],["RX 7600",235,8]];
+// [nome, índice relativo em jogos (Ryzen 5 3600 = 100)]
+const C=[["Core i3-12100F",110],["Core i5-7400",65],["Core i5-8400",90],["Core i5-9400F",95],["Core i5-10400F",105],["Core i5-12400F",145],["Core i7-7700",80],["Core i7-8700",105],["Ryzen 5 1600",70],["Ryzen 5 2600",80],["Ryzen 5 3600",100],["Ryzen 5 4500",98],["Ryzen 5 5500",120],["Ryzen 5 5600",140],["Ryzen 5 5600G",130],["Ryzen 5 5600X",145],["Ryzen 7 3700X",108],["Ryzen 7 5700X",155],["Xeon E5-1650 v3",85],["Xeon E5-2640 v4",82],["Xeon E5-2650 v4",78],["Xeon E5-2667 v3",95],["Xeon E5-2680 v4",90],["Xeon E5-2690 v4",95]];
+// c=0 significa que o dev não deu referência de CPU para esse nível
+const R=[
+{n:"Xbox Series S",c:100,g:115,v:0,t:"Segundo a lista da comunidade: Ryzen 5 3600 (ou Zen 2 de 8 núcleos), GPU GTX 1650 Super / 1660 / RX 5500 XT e 16 GB de RAM."},
+{n:"Xbox Series X",c:110,g:260,v:0,t:"Ryzen 7 3700X ou Ryzen 5 5600; GPU RTX 3060 Ti / 3070 / RX 6700 XT / RX 6800; 16 GB; SSD NVMe de 1 TB."},
+{n:"PS5",c:108,g:270,v:0,t:"Ryzen 7 3700X ou Zen 2 de 8 núcleos; GPU RTX 2070 Super / 3070 / RX 6700 XT; 16 GB; SSD NVMe rápido."},
+{n:"PS5 Pro",c:130,g:310,v:0,t:"Segundo a lista da comunidade: GPU RX 9060 XT 16 GB ou RTX 5060 Ti 16 GB, com CPU Zen 2 ou Zen 3 de 8 núcleos (3700X ou 5700X)."},
+{n:"Mínimo do dev (RTX 30 de 8 GB)",c:145,g:150,v:8,t:"Ryzen 5 5600X (talvez o 5600 sem X), RTX série 30 com 8 GB ou equivalente AMD, DDR4 3200 MHz ou mais, 16 GB, 250 GB ou mais. Para configurações baixas, mas não no lançamento."},
+
+{n:"Low 1080p, mínimo (i7-7700 + RX 580 2048SP)",c:80,g:100,v:0,t:"Referência definida pelo dono do site: Core i7-7700, RX 580 2048SP, 16 GB DDR4 e gráfico baixo em 1080p. O dev só diz que a RX 580 roda com gráficos baixos. A CPU e a resolução são do dono do site, e ninguém testou isso no Leonida."},
+{n:"Low 1080p, recomendado (GTX 1660 + i5-12400F / Ryzen 5 5600)",c:140,g:127,v:6,t:"Core i5-12400F ou Ryzen 5 5600, GTX 1660, 16 GB DDR4, gráfico baixo em 1080p. Spec enviada pelo dono do site."},
+{n:"Low 1080p, confortável (RX 6700 XT)",c:140,g:275,v:8,t:"Core i5-12400F ou Ryzen 5 5600, RX 6700 XT, 16 GB DDR4, gráfico baixo em 1080p."}];
+const P=[["i7-7700 + RX 580 2048SP","Core i7-7700","RX 580 2048SP",16],["Xeon 2690 v4 + RX 7600","Xeon E5-2690 v4","RX 7600",16],["Ryzen 5 4500 + GTX 1660 Ti","Ryzen 5 4500","GTX 1660 Ti",16]];
+const RD=[["Ryzen 5 3600","GTX 1650 Super (ou GTX 1660 / RX 5500 XT)"],["Ryzen 7 3700X (ou Ryzen 5 5600)","RTX 3060 Ti / RTX 3070 / RX 6700 XT / RX 6800"],["Ryzen 7 3700X","RTX 2070 Super / RTX 3070 / RX 6700 XT"],["Zen 2 ou Zen 3 de 8 núcleos (3700X ou 5700X)","RX 9060 XT 16 GB ou RTX 5060 Ti 16 GB"],["Ryzen 5 5600X (talvez o 5600)","RTX série 30 de 8 GB ou equivalente AMD"],["Core i5-12400F ou Ryzen 5 5600","GTX 1660 (o dev diz que a RX 580 roda)"],["Core i5-12400F ou Ryzen 5 5600","RX 6700 XT"]];
+const $=id=>document.getElementById(id);
+const norm=s=>s.toLowerCase().replace(/[^a-z0-9]/g,"");
+const find=(L,q)=>{q=norm(q);if(!q)return null;return L.find(x=>norm(x[0])===q)||(q.length>=4?L.find(x=>norm(x[0]).includes(q)):null)||null};
+const st=r=>r>=1.08?"acima":r>=0.88?"faixa":r>=0.75?"perto":"abaixo";
+const lab={acima:"Acima do nível",faixa:"Bate com o nível",perto:"Quase bate",abaixo:"Abaixo do nível",nd:"Desconhecido",na:"Sem referência"};
+const rank={abaixo:0,perto:1,faixa:2,acima:3};
+C.forEach(x=>$("cpus").insertAdjacentHTML("beforeend",`<option value="${x[0]}">`));
+G.forEach(x=>$("gpus").insertAdjacentHTML("beforeend",`<option value="${x[0]}">`));
+R.forEach((x,i)=>$("ref").insertAdjacentHTML("beforeend",`<option value="${i}">${x.n}</option>`));
+P.forEach(p=>{const b=document.createElement("button");b.type="button";b.textContent=p[0];b.onclick=()=>{$("cpu").value=p[1];$("gpu").value=p[2];$("ram").value=p[3];$("ramt").value="DDR4";go()};$("presets").appendChild(b)});
+function ev(r,c,g,o){
+ const sc=r.c?(c?st(c[1]/r.c):"nd"):"na";
+ let sg=g?st(g[1]/r.g):"nd";
+ if(g&&r.v&&g[2]<r.v)sg="abaixo";
+ let sr=o.rt==="DDR3"||o.ram<16?"abaixo":(o.ram>=32||o.rt==="DDR5")?"acima":"faixa";
+ if(o.rt==="DDR4"&&o.sp<3200&&sr==="faixa")sr="perto";
+ const ss=o.sto==="HD"||o.gb<250?"abaixo":o.sto==="SATA"?"faixa":"acima";
+ const ap=[sc,sg].filter(x=>x!=="na"),known=ap.filter(x=>x!=="nd");
+ const all=ap.includes("abaixo")?"abaixo":(ap.includes("nd")||!known.length)?"nd":known.reduce((a,b)=>rank[a]<rank[b]?a:b);
+ return{sc,sg,sr,ss,all};
+}
+function go(){
+ const r=R[+$("ref").value],c=find(C,$("cpu").value),g=find(G,$("gpu").value);
+ const o={ram:+$("ram").value||0,rt:$("ramt").value,sp:+$("sp").value||0,sto:$("sto").value,gb:+$("gb").value||0};
+ const e=ev(r,c,g,o);
+ $("title").textContent="Comparação com "+r.n;
+ $("refnote").innerHTML="<b>Hardware do nível:</b> "+RD[+$("ref").value][0]+" + "+RD[+$("ref").value][1]+"<br>"+r.t;
+ const gv=g?(r.v&&g[2]<r.v?` (VRAM ${g[2]} GB, abaixo dos ${r.v} GB)`:` (VRAM ${g[2]} GB)`):"";
+ const ramTxt=o.rt==="DDR3"?"DDR3 é mais antiga que o DDR4 3200 que o dev pede":o.ram<16?"Abaixo dos 16 GB mínimos do dev":(o.rt==="DDR4"&&o.sp<3200)?"DDR4 abaixo dos 3200 MHz que o dev cita":(o.ram>=32||o.rt==="DDR5")?"A lista considera 32 GB DDR4 ou mais como ideal":"16 GB é o mínimo do dev, e o autor da lista não sabe se basta";
+ const stoTxt=o.sto==="HD"?"As notas pedem SSD NVMe rápido, e um HD fica abaixo disso":o.gb<250?"Abaixo dos 250 GB que o dev cita":o.sto==="SATA"?"SSD SATA: acima de HD, mas as notas falam em NVMe":"SSD NVMe e espaço suficiente";
+ const up=g?(/^RTX/.test(g[0])?"DLSS e FSR (segundo o dev)":"FSR (segundo o dev)"):"Informe a GPU";
+ const row=(a,b,cl,t)=>`<div class="row"><div><b>${a}</b><small>${b}</small></div><div class="b ${cl}">${t}</div></div>`;
+ $("rows").innerHTML=
+  row("CPU",c?c[0]:($("cpu").value?"Modelo não encontrado na lista":"Digite o seu modelo"),e.sc,lab[e.sc])+
+  row("GPU",g?g[0]+gv:($("gpu").value?"Modelo não encontrado na lista":"Digite o seu modelo"),e.sg,lab[e.sg])+
+  row("RAM",ramTxt,e.sr,lab[e.sr])+
+  row("Armazenamento",stoTxt,e.ss,lab[e.ss])+
+  row("Upscaling",up,"na","Informativo")+
+  row("Resultado geral","Pior entre CPU e GPU",e.all,lab[e.all]);
+ $("warn").textContent="Estimativa não oficial. O dev diz que o Leonida não está pronto nem é jogável, e o FPS não foi verificado.";
+ $("all").innerHTML=R.map(x=>{const y=ev(x,c,g,o);return`<tr><td>${x.n}</td><td class="${y.sc}">${lab[y.sc]}</td><td class="${y.sg}">${lab[y.sg]}</td><td class="b ${y.all}">${lab[y.all]}</td></tr>`}).join("");
+}
+["ref","cpu","gpu","ramt","ram","sp","sto","gb"].forEach(i=>$(i).addEventListener("input",go));
+go();
+</script>
+</body>
+</html>
